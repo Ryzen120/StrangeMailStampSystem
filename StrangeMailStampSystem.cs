@@ -44,7 +44,7 @@ namespace StrangeMailStampSystem
 
         private void IntializeList()
         {
-            string fileName = "C:\\Users\\bmanb\\Documents\\GuildMembers.txt";
+            string fileName = "C:\\Users\\Bobby\\Documents\\GuildMembers.txt";
             gGuildMemberList = File.ReadAllLines(fileName).ToList();
             gGuildMemberListBonus = File.ReadAllLines(fileName).ToList();
 
