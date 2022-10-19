@@ -125,7 +125,7 @@
             this.m_ButtonRoll.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.m_ButtonRoll.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_ButtonRoll.ForeColor = System.Drawing.Color.Black;
-            this.m_ButtonRoll.Location = new System.Drawing.Point(1112, 94);
+            this.m_ButtonRoll.Location = new System.Drawing.Point(1119, 94);
             this.m_ButtonRoll.Name = "m_ButtonRoll";
             this.m_ButtonRoll.Size = new System.Drawing.Size(75, 23);
             this.m_ButtonRoll.TabIndex = 6;
