@@ -1,0 +1,10 @@
+C:\Users\Bobby\source\repos\StrangeMailStampSystem\StrangeMailStampSystem\bin\Debug\StrangeMailStampSystem.exe.config
+C:\Users\Bobby\source\repos\StrangeMailStampSystem\StrangeMailStampSystem\bin\Debug\StrangeMailStampSystem.exe
+C:\Users\Bobby\source\repos\StrangeMailStampSystem\StrangeMailStampSystem\bin\Debug\StrangeMailStampSystem.pdb
+C:\Users\Bobby\source\repos\StrangeMailStampSystem\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.StrangeMailStampSystem.resources
+C:\Users\Bobby\source\repos\StrangeMailStampSystem\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.Properties.Resources.resources
+C:\Users\Bobby\source\repos\StrangeMailStampSystem\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.csproj.GenerateResource.cache
+C:\Users\Bobby\source\repos\StrangeMailStampSystem\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.exe
+C:\Users\Bobby\source\repos\StrangeMailStampSystem\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.pdb
+C:\Users\Bobby\source\repos\StrangeMailStampSystem\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.csproj.AssemblyReference.cache
+C:\Users\Bobby\source\repos\StrangeMailStampSystem\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.csproj.CoreCompileInputs.cache
