@@ -64,7 +64,7 @@
             this.m_LabelTitle.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.m_LabelTitle.Location = new System.Drawing.Point(494, 19);
             this.m_LabelTitle.Name = "m_LabelTitle";
-            this.m_LabelTitle.Size = new System.Drawing.Size(368, 33);
+            this.m_LabelTitle.Size = new System.Drawing.Size(462, 40);
             this.m_LabelTitle.TabIndex = 0;
             this.m_LabelTitle.Text = "Strange Mail Stamp System";
             // 
@@ -87,7 +87,7 @@
             this.m_LabelItemName.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.m_LabelItemName.Location = new System.Drawing.Point(781, 96);
             this.m_LabelItemName.Name = "m_LabelItemName";
-            this.m_LabelItemName.Size = new System.Drawing.Size(87, 20);
+            this.m_LabelItemName.Size = new System.Drawing.Size(106, 25);
             this.m_LabelItemName.TabIndex = 2;
             this.m_LabelItemName.Text = "Item Name";
             // 
@@ -115,7 +115,7 @@
             this.m_LabelResults.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.m_LabelResults.Location = new System.Drawing.Point(941, 228);
             this.m_LabelResults.Name = "m_LabelResults";
-            this.m_LabelResults.Size = new System.Drawing.Size(106, 20);
+            this.m_LabelResults.Size = new System.Drawing.Size(125, 25);
             this.m_LabelResults.TabIndex = 5;
             this.m_LabelResults.Text = "Roll Results";
             // 
@@ -125,9 +125,9 @@
             this.m_ButtonRoll.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.m_ButtonRoll.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_ButtonRoll.ForeColor = System.Drawing.Color.Black;
-            this.m_ButtonRoll.Location = new System.Drawing.Point(1112, 94);
+            this.m_ButtonRoll.Location = new System.Drawing.Point(1109, 116);
             this.m_ButtonRoll.Name = "m_ButtonRoll";
-            this.m_ButtonRoll.Size = new System.Drawing.Size(75, 23);
+            this.m_ButtonRoll.Size = new System.Drawing.Size(75, 31);
             this.m_ButtonRoll.TabIndex = 6;
             this.m_ButtonRoll.Text = "Roll";
             this.m_ButtonRoll.UseVisualStyleBackColor = false;
@@ -138,7 +138,7 @@
             this.m_Checkbox10Man.AutoSize = true;
             this.m_Checkbox10Man.Location = new System.Drawing.Point(826, 139);
             this.m_Checkbox10Man.Name = "m_Checkbox10Man";
-            this.m_Checkbox10Man.Size = new System.Drawing.Size(62, 17);
+            this.m_Checkbox10Man.Size = new System.Drawing.Size(71, 19);
             this.m_Checkbox10Man.TabIndex = 7;
             this.m_Checkbox10Man.Text = "10 Man";
             this.m_Checkbox10Man.UseVisualStyleBackColor = true;
@@ -151,7 +151,7 @@
             this.m_CheckBox25Man.CheckState = System.Windows.Forms.CheckState.Checked;
             this.m_CheckBox25Man.Location = new System.Drawing.Point(826, 162);
             this.m_CheckBox25Man.Name = "m_CheckBox25Man";
-            this.m_CheckBox25Man.Size = new System.Drawing.Size(62, 17);
+            this.m_CheckBox25Man.Size = new System.Drawing.Size(71, 19);
             this.m_CheckBox25Man.TabIndex = 8;
             this.m_CheckBox25Man.Text = "25 Man";
             this.m_CheckBox25Man.UseVisualStyleBackColor = true;
@@ -189,7 +189,7 @@
             this.m_labelGuildMemberList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_labelGuildMemberList.Location = new System.Drawing.Point(149, 89);
             this.m_labelGuildMemberList.Name = "m_labelGuildMemberList";
-            this.m_labelGuildMemberList.Size = new System.Drawing.Size(110, 20);
+            this.m_labelGuildMemberList.Size = new System.Drawing.Size(133, 25);
             this.m_labelGuildMemberList.TabIndex = 11;
             this.m_labelGuildMemberList.Text = "Normal Rolls";
             // 
@@ -199,7 +199,7 @@
             this.m_LabelGuildMembersStampRolls.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_LabelGuildMembersStampRolls.Location = new System.Drawing.Point(539, 89);
             this.m_LabelGuildMembersStampRolls.Name = "m_LabelGuildMembersStampRolls";
-            this.m_LabelGuildMembersStampRolls.Size = new System.Drawing.Size(106, 20);
+            this.m_LabelGuildMembersStampRolls.Size = new System.Drawing.Size(127, 25);
             this.m_LabelGuildMembersStampRolls.TabIndex = 12;
             this.m_LabelGuildMembersStampRolls.Text = "Stamp Rolls";
             // 
