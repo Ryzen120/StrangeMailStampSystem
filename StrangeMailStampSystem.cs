@@ -22,6 +22,7 @@ namespace StrangeMailStampSystem
     public partial class StrangeMailStampSystem : Form
     {
         private List<string> gGuildMemberList;
+        private List<string> gGuildMemberListBonus;
 
         private Point gStartLocation;
 
@@ -38,12 +39,15 @@ namespace StrangeMailStampSystem
             gStartPoint = new int[2];
             gLogFile = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Strange_Mail_Stamp_System_Logs.txt";
             gGuildMemberList = new List<string>();
+            gGuildMemberListBonus = new List<string>();
         }
 
         private void IntializeList()
         {
             string fileName = "C:\\Users\\Bobby\\Documents\\GuildMembers.txt";
             gGuildMemberList = File.ReadAllLines(fileName).ToList();
+            gGuildMemberListBonus = File.ReadAllLines(fileName).ToList();
+
             Console.WriteLine("tyest");
         }
 
@@ -161,6 +165,7 @@ namespace StrangeMailStampSystem
             IntializeList();
             UpdateLogs("List Initialized");
             m_checkedListBoxGuildMembers.Items.AddRange(gGuildMemberList.ToArray());
+            m_checkedListBoxGuildMembersBonus.Items.AddRange(gGuildMemberList.ToArray());
         }
     }
 }

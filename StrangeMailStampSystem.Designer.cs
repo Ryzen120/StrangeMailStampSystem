@@ -39,6 +39,9 @@
             this.m_Checkbox10Man = new System.Windows.Forms.CheckBox();
             this.m_CheckBox25Man = new System.Windows.Forms.CheckBox();
             this.m_ButtonInitList = new System.Windows.Forms.Button();
+            this.m_checkedListBoxGuildMembersBonus = new System.Windows.Forms.CheckedListBox();
+            this.m_labelGuildMemberList = new System.Windows.Forms.Label();
+            this.m_LabelGuildMembersStampRolls = new System.Windows.Forms.Label();
             this.m_PanelTitleBar.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,21 +73,19 @@
             this.m_checkedListBoxGuildMembers.BackColor = System.Drawing.Color.Black;
             this.m_checkedListBoxGuildMembers.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.m_checkedListBoxGuildMembers.FormattingEnabled = true;
-            this.m_checkedListBoxGuildMembers.Location = new System.Drawing.Point(22, 96);
+            this.m_checkedListBoxGuildMembers.Location = new System.Drawing.Point(22, 116);
             this.m_checkedListBoxGuildMembers.Name = "m_checkedListBoxGuildMembers";
             this.m_checkedListBoxGuildMembers.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.m_checkedListBoxGuildMembers.Size = new System.Drawing.Size(354, 649);
             this.m_checkedListBoxGuildMembers.TabIndex = 1;
             this.m_checkedListBoxGuildMembers.ThreeDCheckBoxes = true;
-           // this.m_checkedListBoxGuildMembers.GetForeColor += new StrangeMailStampSystem.CustomCheckedListBox.GetColorDelegate(this.m_checkedListBoxGuildMembers_GetForeColor);
-           // this.m_checkedListBoxGuildMembers.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.m_checkedListBoxGuildMembers_ItemCheck);
             // 
             // m_LabelItemName
             // 
             this.m_LabelItemName.AutoSize = true;
             this.m_LabelItemName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_LabelItemName.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.m_LabelItemName.Location = new System.Drawing.Point(410, 117);
+            this.m_LabelItemName.Location = new System.Drawing.Point(781, 96);
             this.m_LabelItemName.Name = "m_LabelItemName";
             this.m_LabelItemName.Size = new System.Drawing.Size(87, 20);
             this.m_LabelItemName.TabIndex = 2;
@@ -92,7 +93,7 @@
             // 
             // m_TextBoxItemName
             // 
-            this.m_TextBoxItemName.Location = new System.Drawing.Point(503, 117);
+            this.m_TextBoxItemName.Location = new System.Drawing.Point(874, 96);
             this.m_TextBoxItemName.Name = "m_TextBoxItemName";
             this.m_TextBoxItemName.Size = new System.Drawing.Size(208, 20);
             this.m_TextBoxItemName.TabIndex = 3;
@@ -100,7 +101,7 @@
             // 
             // m_RichTextBoxResults
             // 
-            this.m_RichTextBoxResults.Location = new System.Drawing.Point(908, 142);
+            this.m_RichTextBoxResults.Location = new System.Drawing.Point(826, 255);
             this.m_RichTextBoxResults.Name = "m_RichTextBoxResults";
             this.m_RichTextBoxResults.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.m_RichTextBoxResults.Size = new System.Drawing.Size(328, 310);
@@ -112,7 +113,7 @@
             this.m_LabelResults.AutoSize = true;
             this.m_LabelResults.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_LabelResults.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.m_LabelResults.Location = new System.Drawing.Point(1023, 115);
+            this.m_LabelResults.Location = new System.Drawing.Point(941, 228);
             this.m_LabelResults.Name = "m_LabelResults";
             this.m_LabelResults.Size = new System.Drawing.Size(106, 20);
             this.m_LabelResults.TabIndex = 5;
@@ -124,7 +125,7 @@
             this.m_ButtonRoll.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.m_ButtonRoll.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_ButtonRoll.ForeColor = System.Drawing.Color.Black;
-            this.m_ButtonRoll.Location = new System.Drawing.Point(664, 722);
+            this.m_ButtonRoll.Location = new System.Drawing.Point(1112, 94);
             this.m_ButtonRoll.Name = "m_ButtonRoll";
             this.m_ButtonRoll.Size = new System.Drawing.Size(75, 23);
             this.m_ButtonRoll.TabIndex = 6;
@@ -135,7 +136,7 @@
             // m_Checkbox10Man
             // 
             this.m_Checkbox10Man.AutoSize = true;
-            this.m_Checkbox10Man.Location = new System.Drawing.Point(455, 160);
+            this.m_Checkbox10Man.Location = new System.Drawing.Point(826, 139);
             this.m_Checkbox10Man.Name = "m_Checkbox10Man";
             this.m_Checkbox10Man.Size = new System.Drawing.Size(62, 17);
             this.m_Checkbox10Man.TabIndex = 7;
@@ -148,7 +149,7 @@
             this.m_CheckBox25Man.AutoSize = true;
             this.m_CheckBox25Man.Checked = true;
             this.m_CheckBox25Man.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.m_CheckBox25Man.Location = new System.Drawing.Point(455, 183);
+            this.m_CheckBox25Man.Location = new System.Drawing.Point(826, 162);
             this.m_CheckBox25Man.Name = "m_CheckBox25Man";
             this.m_CheckBox25Man.Size = new System.Drawing.Size(62, 17);
             this.m_CheckBox25Man.TabIndex = 8;
@@ -162,7 +163,7 @@
             this.m_ButtonInitList.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.m_ButtonInitList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_ButtonInitList.ForeColor = System.Drawing.Color.Black;
-            this.m_ButtonInitList.Location = new System.Drawing.Point(22, 751);
+            this.m_ButtonInitList.Location = new System.Drawing.Point(22, 771);
             this.m_ButtonInitList.Name = "m_ButtonInitList";
             this.m_ButtonInitList.Size = new System.Drawing.Size(119, 23);
             this.m_ButtonInitList.TabIndex = 9;
@@ -170,12 +171,47 @@
             this.m_ButtonInitList.UseVisualStyleBackColor = false;
             this.m_ButtonInitList.Click += new System.EventHandler(this.m_ButtonInitList_Click);
             // 
+            // m_checkedListBoxGuildMembersBonus
+            // 
+            this.m_checkedListBoxGuildMembersBonus.BackColor = System.Drawing.Color.Black;
+            this.m_checkedListBoxGuildMembersBonus.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.m_checkedListBoxGuildMembersBonus.FormattingEnabled = true;
+            this.m_checkedListBoxGuildMembersBonus.Location = new System.Drawing.Point(406, 116);
+            this.m_checkedListBoxGuildMembersBonus.Name = "m_checkedListBoxGuildMembersBonus";
+            this.m_checkedListBoxGuildMembersBonus.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.m_checkedListBoxGuildMembersBonus.Size = new System.Drawing.Size(354, 649);
+            this.m_checkedListBoxGuildMembersBonus.TabIndex = 10;
+            this.m_checkedListBoxGuildMembersBonus.ThreeDCheckBoxes = true;
+            // 
+            // m_labelGuildMemberList
+            // 
+            this.m_labelGuildMemberList.AutoSize = true;
+            this.m_labelGuildMemberList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.m_labelGuildMemberList.Location = new System.Drawing.Point(149, 89);
+            this.m_labelGuildMemberList.Name = "m_labelGuildMemberList";
+            this.m_labelGuildMemberList.Size = new System.Drawing.Size(110, 20);
+            this.m_labelGuildMemberList.TabIndex = 11;
+            this.m_labelGuildMemberList.Text = "Normal Rolls";
+            // 
+            // m_LabelGuildMembersStampRolls
+            // 
+            this.m_LabelGuildMembersStampRolls.AutoSize = true;
+            this.m_LabelGuildMembersStampRolls.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.m_LabelGuildMembersStampRolls.Location = new System.Drawing.Point(539, 89);
+            this.m_LabelGuildMembersStampRolls.Name = "m_LabelGuildMembersStampRolls";
+            this.m_LabelGuildMembersStampRolls.Size = new System.Drawing.Size(106, 20);
+            this.m_LabelGuildMembersStampRolls.TabIndex = 12;
+            this.m_LabelGuildMembersStampRolls.Text = "Stamp Rolls";
+            // 
             // StrangeMailStampSystem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MidnightBlue;
             this.ClientSize = new System.Drawing.Size(1315, 806);
+            this.Controls.Add(this.m_LabelGuildMembersStampRolls);
+            this.Controls.Add(this.m_labelGuildMemberList);
+            this.Controls.Add(this.m_checkedListBoxGuildMembersBonus);
             this.Controls.Add(this.m_ButtonInitList);
             this.Controls.Add(this.m_CheckBox25Man);
             this.Controls.Add(this.m_Checkbox10Man);
@@ -211,6 +247,9 @@
         private System.Windows.Forms.CheckBox m_Checkbox10Man;
         private System.Windows.Forms.CheckBox m_CheckBox25Man;
         private System.Windows.Forms.Button m_ButtonInitList;
+        private System.Windows.Forms.CheckedListBox m_checkedListBoxGuildMembersBonus;
+        private System.Windows.Forms.Label m_labelGuildMemberList;
+        private System.Windows.Forms.Label m_LabelGuildMembersStampRolls;
     }
 }
 
