@@ -42,6 +42,8 @@
             this.m_checkedListBoxGuildMembersBonus = new System.Windows.Forms.CheckedListBox();
             this.m_labelGuildMemberList = new System.Windows.Forms.Label();
             this.m_LabelGuildMembersStampRolls = new System.Windows.Forms.Label();
+            this.m_ButtonGatherRollData = new System.Windows.Forms.Button();
+            this.m_ButtonEnterRolls = new System.Windows.Forms.Button();
             this.m_PanelTitleBar.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -101,10 +103,10 @@
             // 
             // m_RichTextBoxResults
             // 
-            this.m_RichTextBoxResults.Location = new System.Drawing.Point(826, 255);
+            this.m_RichTextBoxResults.Location = new System.Drawing.Point(794, 455);
             this.m_RichTextBoxResults.Name = "m_RichTextBoxResults";
             this.m_RichTextBoxResults.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.m_RichTextBoxResults.Size = new System.Drawing.Size(328, 310);
+            this.m_RichTextBoxResults.Size = new System.Drawing.Size(509, 310);
             this.m_RichTextBoxResults.TabIndex = 4;
             this.m_RichTextBoxResults.Text = "";
             // 
@@ -113,7 +115,7 @@
             this.m_LabelResults.AutoSize = true;
             this.m_LabelResults.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_LabelResults.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.m_LabelResults.Location = new System.Drawing.Point(941, 228);
+            this.m_LabelResults.Location = new System.Drawing.Point(989, 420);
             this.m_LabelResults.Name = "m_LabelResults";
             this.m_LabelResults.Size = new System.Drawing.Size(106, 20);
             this.m_LabelResults.TabIndex = 5;
@@ -125,9 +127,9 @@
             this.m_ButtonRoll.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.m_ButtonRoll.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_ButtonRoll.ForeColor = System.Drawing.Color.Black;
-            this.m_ButtonRoll.Location = new System.Drawing.Point(1119, 94);
+            this.m_ButtonRoll.Location = new System.Drawing.Point(794, 334);
             this.m_ButtonRoll.Name = "m_ButtonRoll";
-            this.m_ButtonRoll.Size = new System.Drawing.Size(75, 23);
+            this.m_ButtonRoll.Size = new System.Drawing.Size(117, 23);
             this.m_ButtonRoll.TabIndex = 6;
             this.m_ButtonRoll.Text = "Roll";
             this.m_ButtonRoll.UseVisualStyleBackColor = false;
@@ -203,12 +205,42 @@
             this.m_LabelGuildMembersStampRolls.TabIndex = 12;
             this.m_LabelGuildMembersStampRolls.Text = "Stamp Rolls";
             // 
+            // m_ButtonGatherRollData
+            // 
+            this.m_ButtonGatherRollData.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.m_ButtonGatherRollData.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.m_ButtonGatherRollData.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.m_ButtonGatherRollData.ForeColor = System.Drawing.Color.Black;
+            this.m_ButtonGatherRollData.Location = new System.Drawing.Point(794, 245);
+            this.m_ButtonGatherRollData.Name = "m_ButtonGatherRollData";
+            this.m_ButtonGatherRollData.Size = new System.Drawing.Size(189, 23);
+            this.m_ButtonGatherRollData.TabIndex = 13;
+            this.m_ButtonGatherRollData.Text = "Gather Rolls From Chat";
+            this.m_ButtonGatherRollData.UseVisualStyleBackColor = false;
+            this.m_ButtonGatherRollData.Click += new System.EventHandler(this.m_ButtonGatherRollData_Click);
+            // 
+            // m_ButtonEnterRolls
+            // 
+            this.m_ButtonEnterRolls.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.m_ButtonEnterRolls.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.m_ButtonEnterRolls.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.m_ButtonEnterRolls.ForeColor = System.Drawing.Color.Black;
+            this.m_ButtonEnterRolls.Location = new System.Drawing.Point(794, 288);
+            this.m_ButtonEnterRolls.Name = "m_ButtonEnterRolls";
+            this.m_ButtonEnterRolls.Size = new System.Drawing.Size(189, 23);
+            this.m_ButtonEnterRolls.TabIndex = 14;
+            this.m_ButtonEnterRolls.Text = "Enter Rolls Manually";
+            this.m_ButtonEnterRolls.UseVisualStyleBackColor = false;
+            this.m_ButtonEnterRolls.Click += new System.EventHandler(this.m_ButtonEnterRolls_Click);
+            // 
             // StrangeMailStampSystem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MidnightBlue;
             this.ClientSize = new System.Drawing.Size(1315, 806);
+            this.Controls.Add(this.m_ButtonEnterRolls);
+            this.Controls.Add(this.m_ButtonGatherRollData);
             this.Controls.Add(this.m_LabelGuildMembersStampRolls);
             this.Controls.Add(this.m_labelGuildMemberList);
             this.Controls.Add(this.m_checkedListBoxGuildMembersBonus);
@@ -250,6 +282,8 @@
         private System.Windows.Forms.CheckedListBox m_checkedListBoxGuildMembersBonus;
         private System.Windows.Forms.Label m_labelGuildMemberList;
         private System.Windows.Forms.Label m_LabelGuildMembersStampRolls;
+        private System.Windows.Forms.Button m_ButtonGatherRollData;
+        private System.Windows.Forms.Button m_ButtonEnterRolls;
     }
 }
 

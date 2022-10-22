@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using Microsoft.VisualBasic;
 
 namespace StrangeMailStampSystem
 {
@@ -24,6 +25,12 @@ namespace StrangeMailStampSystem
         private List<string> gGuildMemberList;
         private List<string> gGuildMemberListBonus;
 
+        private List<string> gGuildMemberListChecked;
+        private List<string> gGuildMemberListBonusChecked;
+
+        private Dictionary<string, int> gPlayersWithRolls;
+        private Dictionary<string, int> gPlayersWithRollsBonus;
+
         private Point gStartLocation;
 
         private bool gDragging;
@@ -31,6 +38,8 @@ namespace StrangeMailStampSystem
         private int[] gStartPoint;
 
         private string gLogFile;
+
+        
 
         public StrangeMailStampSystem()
         {
@@ -40,6 +49,12 @@ namespace StrangeMailStampSystem
             gLogFile = Environment.GetEnvironmentVariable("USERPROFILE") + "\\Strange_Mail_Stamp_System_Logs.txt";
             gGuildMemberList = new List<string>();
             gGuildMemberListBonus = new List<string>();
+
+            gGuildMemberListChecked = new List<string>();
+            gGuildMemberListBonusChecked = new List<string>();
+
+            gPlayersWithRolls = new Dictionary<string, int>();
+            gPlayersWithRollsBonus = new Dictionary<string, int>();
         }
 
         private void IntializeList()
@@ -147,7 +162,7 @@ namespace StrangeMailStampSystem
 
         private void m_ButtonRoll_Click(object sender, EventArgs e)
         {
-            
+            //new SheetSync(this);
         }
 
         private void m_Checkbox10Man_CheckedChanged(object sender, EventArgs e)
@@ -166,6 +181,60 @@ namespace StrangeMailStampSystem
             UpdateLogs("List Initialized");
             m_checkedListBoxGuildMembers.Items.AddRange(gGuildMemberList.ToArray());
             m_checkedListBoxGuildMembersBonus.Items.AddRange(gGuildMemberList.ToArray());
+        }
+
+        private void CreateCheckedLists()
+        {
+
+
+            for(int i = 0; i < m_checkedListBoxGuildMembers.CheckedItems.Count; i++)
+            {
+                gGuildMemberListChecked.Add(m_checkedListBoxGuildMembers.CheckedItems[i].ToString());
+            }
+
+            for (int i = 0; i < m_checkedListBoxGuildMembersBonus.CheckedItems.Count; i++)
+            {
+                gGuildMemberListBonusChecked.Add(m_checkedListBoxGuildMembersBonus.CheckedItems[i].ToString());
+            }
+
+        }
+
+        private void m_ButtonGatherRollData_Click(object sender, EventArgs e)
+        {
+            CreateCheckedLists();
+
+            new RollChecker(this, gGuildMemberListChecked, gGuildMemberListBonusChecked);
+        }
+
+        private void m_ButtonEnterRolls_Click(object sender, EventArgs e)
+        {
+            // Grab rolls from game for normal roll members and store them in normal roll dictionary
+            for (int i = 0; i < m_checkedListBoxGuildMembers.CheckedItems.Count; i++)
+            {
+                string name = m_checkedListBoxGuildMembers.CheckedItems[i].ToString();
+                string roll = Interaction.InputBox("Enter roll for " + m_checkedListBoxGuildMembers.CheckedItems[i].ToString(), "Enter The Roll", "", 400, 400);
+
+                int rollValue;
+                rollValue = Int32.Parse(roll);
+
+                gPlayersWithRolls.Add(m_checkedListBoxGuildMembers.CheckedItems[i].ToString(), rollValue);
+
+
+            }
+
+            // Grab rolls from game for stamp roll members and store them in stamp roll dictionary
+            for (int i = 0; i < m_checkedListBoxGuildMembersBonus.CheckedItems.Count; i++)
+            {
+                string name = m_checkedListBoxGuildMembersBonus.CheckedItems[i].ToString();
+                string roll = Interaction.InputBox("Enter roll for " + m_checkedListBoxGuildMembersBonus.CheckedItems[i].ToString() + ". Stamps will be applied!", "Enter The Roll", "", 400, 400);
+
+                int rollValue;
+                rollValue = Int32.Parse(roll);
+
+                gPlayersWithRollsBonus.Add(m_checkedListBoxGuildMembersBonus.CheckedItems[i].ToString(), rollValue);
+            }
+
+            new SheetSync(this, gPlayersWithRolls, gPlayersWithRollsBonus);
         }
     }
 }
