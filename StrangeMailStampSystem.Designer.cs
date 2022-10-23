@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.m_PanelTitleBar = new System.Windows.Forms.Panel();
+            this.m_ButtonCloseApp = new System.Windows.Forms.Button();
+            this.m_ButtonMinimize = new System.Windows.Forms.Button();
             this.m_LabelTitle = new System.Windows.Forms.Label();
             this.m_checkedListBoxGuildMembers = new System.Windows.Forms.CheckedListBox();
             this.m_LabelItemName = new System.Windows.Forms.Label();
@@ -44,12 +46,18 @@
             this.m_LabelGuildMembersStampRolls = new System.Windows.Forms.Label();
             this.m_ButtonGatherRollData = new System.Windows.Forms.Button();
             this.m_ButtonEnterRolls = new System.Windows.Forms.Button();
+            this.m_CheckBoxNaxx = new System.Windows.Forms.CheckBox();
+            this.m_CheckBoxEoE = new System.Windows.Forms.CheckBox();
+            this.m_CheckBoxOS = new System.Windows.Forms.CheckBox();
+            this.m_ButtonClearAllFields = new System.Windows.Forms.Button();
             this.m_PanelTitleBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // m_PanelTitleBar
             // 
             this.m_PanelTitleBar.BackColor = System.Drawing.Color.Black;
+            this.m_PanelTitleBar.Controls.Add(this.m_ButtonCloseApp);
+            this.m_PanelTitleBar.Controls.Add(this.m_ButtonMinimize);
             this.m_PanelTitleBar.Controls.Add(this.m_LabelTitle);
             this.m_PanelTitleBar.Location = new System.Drawing.Point(0, 0);
             this.m_PanelTitleBar.Name = "m_PanelTitleBar";
@@ -58,6 +66,30 @@
             this.m_PanelTitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.m_PanelTitleBar_MouseDown);
             this.m_PanelTitleBar.MouseMove += new System.Windows.Forms.MouseEventHandler(this.m_PanelTitleBar_MouseMove);
             this.m_PanelTitleBar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.m_PanelTitleBar_MouseUp);
+            // 
+            // m_ButtonCloseApp
+            // 
+            this.m_ButtonCloseApp.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.m_ButtonCloseApp.ForeColor = System.Drawing.Color.Black;
+            this.m_ButtonCloseApp.Location = new System.Drawing.Point(1260, 19);
+            this.m_ButtonCloseApp.Name = "m_ButtonCloseApp";
+            this.m_ButtonCloseApp.Size = new System.Drawing.Size(34, 30);
+            this.m_ButtonCloseApp.TabIndex = 5;
+            this.m_ButtonCloseApp.Text = "X";
+            this.m_ButtonCloseApp.UseVisualStyleBackColor = true;
+            this.m_ButtonCloseApp.Click += new System.EventHandler(this.m_ButtonCloseApp_Click);
+            // 
+            // m_ButtonMinimize
+            // 
+            this.m_ButtonMinimize.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.m_ButtonMinimize.ForeColor = System.Drawing.Color.Black;
+            this.m_ButtonMinimize.Location = new System.Drawing.Point(1220, 19);
+            this.m_ButtonMinimize.Name = "m_ButtonMinimize";
+            this.m_ButtonMinimize.Size = new System.Drawing.Size(34, 30);
+            this.m_ButtonMinimize.TabIndex = 4;
+            this.m_ButtonMinimize.Text = "-";
+            this.m_ButtonMinimize.UseVisualStyleBackColor = true;
+            this.m_ButtonMinimize.Click += new System.EventHandler(this.m_ButtonMinimize_Click);
             // 
             // m_LabelTitle
             // 
@@ -97,6 +129,7 @@
             // 
             this.m_TextBoxItemName.Location = new System.Drawing.Point(874, 96);
             this.m_TextBoxItemName.Name = "m_TextBoxItemName";
+            this.m_TextBoxItemName.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.m_TextBoxItemName.Size = new System.Drawing.Size(208, 20);
             this.m_TextBoxItemName.TabIndex = 3;
             this.m_TextBoxItemName.TextChanged += new System.EventHandler(this.m_TextBoxItemName_TextChanged);
@@ -124,6 +157,7 @@
             // m_ButtonRoll
             // 
             this.m_ButtonRoll.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.m_ButtonRoll.Enabled = false;
             this.m_ButtonRoll.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.m_ButtonRoll.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_ButtonRoll.ForeColor = System.Drawing.Color.Black;
@@ -138,7 +172,7 @@
             // m_Checkbox10Man
             // 
             this.m_Checkbox10Man.AutoSize = true;
-            this.m_Checkbox10Man.Location = new System.Drawing.Point(826, 139);
+            this.m_Checkbox10Man.Location = new System.Drawing.Point(886, 132);
             this.m_Checkbox10Man.Name = "m_Checkbox10Man";
             this.m_Checkbox10Man.Size = new System.Drawing.Size(62, 17);
             this.m_Checkbox10Man.TabIndex = 7;
@@ -149,9 +183,7 @@
             // m_CheckBox25Man
             // 
             this.m_CheckBox25Man.AutoSize = true;
-            this.m_CheckBox25Man.Checked = true;
-            this.m_CheckBox25Man.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.m_CheckBox25Man.Location = new System.Drawing.Point(826, 162);
+            this.m_CheckBox25Man.Location = new System.Drawing.Point(886, 155);
             this.m_CheckBox25Man.Name = "m_CheckBox25Man";
             this.m_CheckBox25Man.Size = new System.Drawing.Size(62, 17);
             this.m_CheckBox25Man.TabIndex = 8;
@@ -208,6 +240,7 @@
             // m_ButtonGatherRollData
             // 
             this.m_ButtonGatherRollData.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.m_ButtonGatherRollData.Enabled = false;
             this.m_ButtonGatherRollData.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.m_ButtonGatherRollData.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_ButtonGatherRollData.ForeColor = System.Drawing.Color.Black;
@@ -222,6 +255,7 @@
             // m_ButtonEnterRolls
             // 
             this.m_ButtonEnterRolls.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.m_ButtonEnterRolls.Enabled = false;
             this.m_ButtonEnterRolls.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.m_ButtonEnterRolls.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.m_ButtonEnterRolls.ForeColor = System.Drawing.Color.Black;
@@ -233,12 +267,63 @@
             this.m_ButtonEnterRolls.UseVisualStyleBackColor = false;
             this.m_ButtonEnterRolls.Click += new System.EventHandler(this.m_ButtonEnterRolls_Click);
             // 
+            // m_CheckBoxNaxx
+            // 
+            this.m_CheckBoxNaxx.AutoSize = true;
+            this.m_CheckBoxNaxx.Location = new System.Drawing.Point(814, 132);
+            this.m_CheckBoxNaxx.Name = "m_CheckBoxNaxx";
+            this.m_CheckBoxNaxx.Size = new System.Drawing.Size(50, 17);
+            this.m_CheckBoxNaxx.TabIndex = 15;
+            this.m_CheckBoxNaxx.Text = "Naxx";
+            this.m_CheckBoxNaxx.UseVisualStyleBackColor = true;
+            this.m_CheckBoxNaxx.CheckedChanged += new System.EventHandler(this.m_CheckBoxNaxx_CheckedChanged);
+            // 
+            // m_CheckBoxEoE
+            // 
+            this.m_CheckBoxEoE.AutoSize = true;
+            this.m_CheckBoxEoE.Location = new System.Drawing.Point(818, 155);
+            this.m_CheckBoxEoE.Name = "m_CheckBoxEoE";
+            this.m_CheckBoxEoE.Size = new System.Drawing.Size(46, 17);
+            this.m_CheckBoxEoE.TabIndex = 16;
+            this.m_CheckBoxEoE.Text = "EoE";
+            this.m_CheckBoxEoE.UseVisualStyleBackColor = true;
+            this.m_CheckBoxEoE.CheckedChanged += new System.EventHandler(this.m_CheckBoxEoE_CheckedChanged);
+            // 
+            // m_CheckBoxOS
+            // 
+            this.m_CheckBoxOS.AutoSize = true;
+            this.m_CheckBoxOS.Location = new System.Drawing.Point(823, 178);
+            this.m_CheckBoxOS.Name = "m_CheckBoxOS";
+            this.m_CheckBoxOS.Size = new System.Drawing.Size(41, 17);
+            this.m_CheckBoxOS.TabIndex = 17;
+            this.m_CheckBoxOS.Text = "OS";
+            this.m_CheckBoxOS.UseVisualStyleBackColor = true;
+            this.m_CheckBoxOS.CheckedChanged += new System.EventHandler(this.m_CheckBoxOS_CheckedChanged);
+            // 
+            // m_ButtonClearAllFields
+            // 
+            this.m_ButtonClearAllFields.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.m_ButtonClearAllFields.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.m_ButtonClearAllFields.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.m_ButtonClearAllFields.ForeColor = System.Drawing.Color.Black;
+            this.m_ButtonClearAllFields.Location = new System.Drawing.Point(406, 771);
+            this.m_ButtonClearAllFields.Name = "m_ButtonClearAllFields";
+            this.m_ButtonClearAllFields.Size = new System.Drawing.Size(119, 23);
+            this.m_ButtonClearAllFields.TabIndex = 18;
+            this.m_ButtonClearAllFields.Text = "Clear Fields";
+            this.m_ButtonClearAllFields.UseVisualStyleBackColor = false;
+            this.m_ButtonClearAllFields.Click += new System.EventHandler(this.m_ButtonClearAllFields_Click);
+            // 
             // StrangeMailStampSystem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MidnightBlue;
             this.ClientSize = new System.Drawing.Size(1315, 806);
+            this.Controls.Add(this.m_ButtonClearAllFields);
+            this.Controls.Add(this.m_CheckBoxOS);
+            this.Controls.Add(this.m_CheckBoxEoE);
+            this.Controls.Add(this.m_CheckBoxNaxx);
             this.Controls.Add(this.m_ButtonEnterRolls);
             this.Controls.Add(this.m_ButtonGatherRollData);
             this.Controls.Add(this.m_LabelGuildMembersStampRolls);
@@ -284,6 +369,12 @@
         private System.Windows.Forms.Label m_LabelGuildMembersStampRolls;
         private System.Windows.Forms.Button m_ButtonGatherRollData;
         private System.Windows.Forms.Button m_ButtonEnterRolls;
+        private System.Windows.Forms.Button m_ButtonCloseApp;
+        private System.Windows.Forms.Button m_ButtonMinimize;
+        private System.Windows.Forms.CheckBox m_CheckBoxNaxx;
+        private System.Windows.Forms.CheckBox m_CheckBoxEoE;
+        private System.Windows.Forms.CheckBox m_CheckBoxOS;
+        private System.Windows.Forms.Button m_ButtonClearAllFields;
     }
 }
 

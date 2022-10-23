@@ -11,6 +11,23 @@ namespace StrangeMailStampSystem
         public string Name { set; get; }
 
         public int Rolls { set; get; }
-        
+
+        public int OriginalStampCount { set; get; }
+
+        public int FinalRoll { set; get; }
+
+        public double StampCost { set; get; }
+
+        public double StampsRemaining { set; get; }
+
+        public string ItemWon { set; get; }
+
+        public Dictionary<string, int> CompetingRolls { set; get; }
+
+        public PlayerData()
+        {
+            CompetingRolls = new Dictionary<string, int>();
+        }
+
     }
 }

@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.VisualBasic;
+using System.Diagnostics;
+using Excel = Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace StrangeMailStampSystem
 {
@@ -31,6 +35,10 @@ namespace StrangeMailStampSystem
         private Dictionary<string, int> gPlayersWithRolls;
         private Dictionary<string, int> gPlayersWithRollsBonus;
 
+        private List<PlayerData> gFinalPlayerDataList;
+
+        private PlayerData gWinningPlayerData;
+
         private Point gStartLocation;
 
         private bool gDragging;
@@ -39,7 +47,14 @@ namespace StrangeMailStampSystem
 
         private string gLogFile;
 
-        
+        private string gItemName;
+
+        private string gRaidName;
+
+        private string gRaidType;
+
+
+
 
         public StrangeMailStampSystem()
         {
@@ -55,6 +70,29 @@ namespace StrangeMailStampSystem
 
             gPlayersWithRolls = new Dictionary<string, int>();
             gPlayersWithRollsBonus = new Dictionary<string, int>();
+
+            gFinalPlayerDataList = new List<PlayerData>();
+
+            gWinningPlayerData = new PlayerData();
+
+            gItemName = "";
+            gRaidName = "";
+            gRaidType = "";
+
+            
+
+        }
+
+        public void CheckIfReady()
+        {
+            if ((m_Checkbox10Man.Checked == true || m_CheckBox25Man.Checked == true) && (m_CheckBoxNaxx.Checked == true || m_CheckBoxEoE.Checked == true || m_CheckBoxOS.Checked == true) && !String.IsNullOrEmpty(gRaidName) && !String.IsNullOrEmpty(gItemName))
+            {
+                m_ButtonEnterRolls.Enabled = true;
+            }
+            else
+            {
+                m_ButtonEnterRolls.Enabled = false;
+            }
         }
 
         private void IntializeList()
@@ -63,7 +101,6 @@ namespace StrangeMailStampSystem
             gGuildMemberList = File.ReadAllLines(fileName).ToList();
             gGuildMemberListBonus = File.ReadAllLines(fileName).ToList();
 
-            Console.WriteLine("tyest");
         }
 
         public void CreateLogFile()
@@ -157,7 +194,9 @@ namespace StrangeMailStampSystem
 
         private void m_TextBoxItemName_TextChanged(object sender, EventArgs e)
         {
+            gItemName = m_TextBoxItemName.Text;
 
+            CheckIfReady();
         }
 
         private void m_ButtonRoll_Click(object sender, EventArgs e)
@@ -167,12 +206,24 @@ namespace StrangeMailStampSystem
 
         private void m_Checkbox10Man_CheckedChanged(object sender, EventArgs e)
         {
+            gRaidType = "";
 
+            m_CheckBox25Man.Checked = false;
+
+            gRaidType = "10 Man";
+
+            CheckIfReady();
         }
 
         private void m_CheckBox25Man_CheckedChanged(object sender, EventArgs e)
         {
+            gRaidType = "";
 
+            m_Checkbox10Man.Checked = false;
+
+            gRaidType = "25 Man";
+
+            CheckIfReady();
         }
 
         private void m_ButtonInitList_Click(object sender, EventArgs e)
@@ -181,6 +232,8 @@ namespace StrangeMailStampSystem
             UpdateLogs("List Initialized");
             m_checkedListBoxGuildMembers.Items.AddRange(gGuildMemberList.ToArray());
             m_checkedListBoxGuildMembersBonus.Items.AddRange(gGuildMemberList.ToArray());
+
+            CheckIfReady();
         }
 
         private void CreateCheckedLists()
@@ -234,7 +287,322 @@ namespace StrangeMailStampSystem
                 gPlayersWithRollsBonus.Add(m_checkedListBoxGuildMembersBonus.CheckedItems[i].ToString(), rollValue);
             }
 
-            new SheetSync(this, gPlayersWithRolls, gPlayersWithRollsBonus);
+            // List of players with bonus rolls and changes are complete after this.
+            new SheetSync(this, gPlayersWithRolls, gPlayersWithRollsBonus, out gFinalPlayerDataList);
+
+            this.UpdateLogs("Final list of bonus rollers compiled");
+
+
+            // Now lets caluculate winner
+            CalculateWinner();
+
+            WriteToLootHistory();
+        }
+
+        public void CalculateWinner()
+        {
+
+            foreach(PlayerData player in gFinalPlayerDataList)
+            {
+                string message = "N/A";
+
+                if (player.OriginalStampCount == 0 || player.StampCost == 0 || player.StampsRemaining == 0)
+                {
+                    this.UpdateLogs(player.Name + " rolled " + player.Rolls + ". Used " + message + " stamps and has final roll of " + player.FinalRoll);
+
+                }
+                else
+                {
+                    this.UpdateLogs(player.Name + " rolled " + player.Rolls + ". Used " + player.OriginalStampCount + " stamps and has final roll of " + player.FinalRoll);
+
+                }
+
+            }
+
+            double winningRoll = gFinalPlayerDataList.Max(player => player.FinalRoll);
+            string winnerName = "";
+            
+            foreach(PlayerData player in gFinalPlayerDataList)
+            {
+
+                if (player.FinalRoll == winningRoll)
+                {
+                    this.UpdateLogs(player.Name + " Wins " + gItemName + " With a roll of " + player.FinalRoll);
+                    winnerName = player.Name;
+
+                    gWinningPlayerData.ItemWon = gItemName;
+                    gWinningPlayerData.Name = player.Name;
+                    gWinningPlayerData.Rolls = player.Rolls;
+                    gWinningPlayerData.OriginalStampCount = player.OriginalStampCount;
+                    gWinningPlayerData.FinalRoll = player.FinalRoll;
+                    gWinningPlayerData.StampCost = player.StampCost;
+                    
+                }
+                else
+                {
+                    gWinningPlayerData.CompetingRolls.Add(player.Name, player.FinalRoll);
+                }
+            }
+
+            foreach(PlayerData player in gFinalPlayerDataList.ToList())
+            {
+                if(player.Name.Equals(winnerName))
+                {
+                    gFinalPlayerDataList.Remove(player);
+                }
+
+                if(player.StampCost == 0)
+                {
+                    gFinalPlayerDataList.Remove(player);
+                }
+            }
+
+            //Create COM Objects. Create a COM object for everything that is referenced
+            Excel.Application xlApp = new Excel.Application();
+            Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(@"G:\My Drive\StrangeMailStampSystem.xlsx", 0, false, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", true, false, 0, true, 1, 0);
+            Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+            Excel.Range xlRange = xlWorksheet.UsedRange;
+
+            int rowCount = xlRange.Rows.Count;
+            int colCount = xlRange.Columns.Count;
+
+            //xlApp.Visible = true;
+
+            // For each player in the list with bonus rolls
+            foreach (var player in gFinalPlayerDataList)
+            {
+
+
+                // Update each players data
+                //UpdatePlayerData(pd);
+
+                for (int i = 1; i <= rowCount; i++)
+                {
+                    for (int j = 1; j <= colCount; j++)
+                    {
+                        //new line
+                        if (j == 1)
+                            Console.Write("\r\n");
+
+                        //write the value to the console
+                        if (xlRange.Cells[i, j] != null && xlRange.Cells[i, j].Value2 != null)
+                        {
+                            Console.Write(xlRange.Cells[i, j].Value2.ToString() + "\t");
+
+                            // If they are not the winner and have a stamp cost lists
+                            if (xlRange.Cells[i, j].Value2.Equals(player.Name))
+                            {
+ 
+
+                                // If they were not the winner, reset their stamp count back to normal
+                                xlRange.Cells[i, j + 1].Value = player.OriginalStampCount;
+                                
+
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            xlWorkbook.Save();
+
+            //cleanup
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            //rule of thumb for releasing com objects:
+            //  never use two dots, all COM objects must be referenced and released individually
+            //  ex: [somthing].[something].[something] is bad
+
+            //release com objects to fully kill excel process from running in the background
+            Marshal.ReleaseComObject(xlRange);
+            Marshal.ReleaseComObject(xlWorksheet);
+
+            //close and release
+            xlWorkbook.Close();
+            Marshal.ReleaseComObject(xlWorkbook);
+
+            //quit and release
+            xlApp.Quit();
+            Marshal.ReleaseComObject(xlApp);
+        }
+
+        double Round(double num, int multipleOf)
+        {
+            return Math.Ceiling((num + multipleOf / 2) / multipleOf) * multipleOf;
+        }
+
+        public void WriteToLootHistory()
+        {
+
+
+            //Create COM Objects. Create a COM object for everything that is referenced
+            Excel.Application xlApp = new Excel.Application();
+            Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(@"G:\My Drive\StrangeMailStampSystem.xlsx", 0, false, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", true, false, 0, true, 1, 0);
+            Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[2];
+            Excel.Range xlRange = xlWorksheet.UsedRange;
+
+            int rowCount = xlRange.Rows.Count;
+            int colCount = xlRange.Columns.Count;
+
+            //These two lines do the magic.
+            xlRange.Columns.ClearFormats();
+            xlRange.Rows.ClearFormats();
+
+            //xlApp.Visible = true;
+
+            List<PlayerData> gWinningPlayerDataList = new List<PlayerData>();
+
+            gWinningPlayerDataList.Add(gWinningPlayerData);
+
+            //Code Here to write row to sheet
+            //xlWorksheet.Rows[rowCount + 1].Insert(gWinningPlayerData);+
+
+            int column = 1;
+
+            //foreach (var item in gWinningPlayerDataList)
+            //xlWorksheet.Cells[1, column++].Value = item;
+
+
+            rowCount = xlRange.Rows.Count;
+            colCount = xlRange.Columns.Count;
+
+            //setting up member values
+            List<string> competingRolls = new List<string>();
+
+            int row = rowCount + 1;
+            column = 1;
+
+            xlWorksheet.Cells[row, column++].Value = gWinningPlayerDataList[0].ItemWon;
+            xlWorksheet.Cells[row, column++].Value = gWinningPlayerDataList[0].Name;
+            xlWorksheet.Cells[row, column++].Value = gWinningPlayerDataList[0].Rolls;
+            xlWorksheet.Cells[row, column++].Value = gWinningPlayerDataList[0].OriginalStampCount;
+            xlWorksheet.Cells[row, column++].Value = gWinningPlayerDataList[0].FinalRoll;
+            xlWorksheet.Cells[row, column++].Value = gWinningPlayerDataList[0].StampCost;
+            xlWorksheet.Cells[row, column++].Value = gRaidName;
+            xlWorksheet.Cells[row, column++].Value = gRaidType;
+            xlWorksheet.Cells[row, column++].Value = System.DateTime.Now.ToString();
+
+
+            /*
+            for(int index = 0; index < item.CompetingRolls.Count; index++)
+            {
+                xlWorksheet.Cells[row++, column].Value = item.CompetingRolls[index];
+            }
+            */
+
+            foreach (var thing in gWinningPlayerDataList[0].CompetingRolls)
+            {
+                competingRolls.Add(thing.ToString());
+            }
+
+            //xlWorksheet.Cells[row, column++].Value = competingRolls.ToArray();
+
+            /*
+            for (int index = 0; index < competingRolls.Count; index++)
+            {
+                xlWorksheet.Cells[row++, column].Value = competingRolls[index];
+            }
+            */
+            for (int index = 0; index < competingRolls.Count; index++)
+            {
+                xlWorksheet.Cells[row++, column].Value = competingRolls[index];
+            }
+
+
+            xlWorkbook.Save();
+
+            //cleanup
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            //rule of thumb for releasing com objects:
+            //  never use two dots, all COM objects must be referenced and released individually
+            //  ex: [somthing].[something].[something] is bad
+
+            //release com objects to fully kill excel process from running in the background
+            Marshal.ReleaseComObject(xlRange);
+            Marshal.ReleaseComObject(xlWorksheet);
+
+            //close and release
+            xlWorkbook.Close();
+            Marshal.ReleaseComObject(xlWorkbook);
+
+            //quit and release
+            xlApp.Quit();
+            Marshal.ReleaseComObject(xlApp);
+
+            this.UpdateLogs("Sheet has been updated. Session Complete");
+        }
+
+        private void m_ButtonMinimize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void m_ButtonCloseApp_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void m_CheckBoxNaxx_CheckedChanged(object sender, EventArgs e)
+        {
+            gRaidName = "";
+
+            m_CheckBoxEoE.Checked = false;
+            m_CheckBoxOS.Checked = false;
+
+            gRaidName = "Naxx";
+
+            CheckIfReady();
+
+        }
+
+        private void m_CheckBoxEoE_CheckedChanged(object sender, EventArgs e)
+        {
+            gRaidName = "";
+
+            m_CheckBoxNaxx.Checked = false;
+            m_CheckBoxOS.Checked = false;
+
+            gRaidName = "EoE";
+
+            CheckIfReady();
+        }
+
+        private void m_CheckBoxOS_CheckedChanged(object sender, EventArgs e)
+        {
+            gRaidName = "";
+
+            m_CheckBoxNaxx.Checked = false;
+            m_CheckBoxEoE.Checked = false;
+
+            gRaidName = "EoE";
+
+            CheckIfReady();
+        }
+
+        private void m_ButtonClearAllFields_Click(object sender, EventArgs e)
+        {
+            m_TextBoxItemName.Text = "";
+            m_Checkbox10Man.Checked = false;
+            m_CheckBox25Man.Checked = false;
+            m_CheckBoxNaxx.Checked = false;
+            m_CheckBoxEoE.Checked = false;
+            m_CheckBoxOS.Checked = false;
+
+            gGuildMemberList.Clear();
+            gGuildMemberListBonus.Clear();
+            gFinalPlayerDataList.Clear();
+            gPlayersWithRolls.Clear();
+            gPlayersWithRollsBonus.Clear();
+            gWinningPlayerData = new PlayerData();
+
+            m_checkedListBoxGuildMembers.Items.Clear();
+            m_checkedListBoxGuildMembersBonus.Items.Clear();
+
         }
     }
+
 }

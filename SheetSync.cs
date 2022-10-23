@@ -15,7 +15,7 @@ namespace StrangeMailStampSystem
 {
     class SheetSync
     {
-        string gPersonalAccessToken = "AIzaSyCXoHNSHKu9P4WAnNzr_YFIVzlWARmosvw";
+        string gPersonalAccessToken = "123";
 
         //string gPersonalAccessToken = "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";
 
@@ -25,10 +25,24 @@ namespace StrangeMailStampSystem
         private Dictionary<string, int> gPlayersWithRolls;
         private Dictionary<string, int> gPlayersWithRollsBonus;
 
-        public SheetSync(StrangeMailStampSystem gui, Dictionary<string, int> playersWithRolls, Dictionary<string, int> playersWithRollsBonus)
+        private List<PlayerData> gFinalPlayerDataList;
+
+        int gFinalRoll;
+        int gStampDeduction;
+        double gRemainingStamps;
+        double gStampCost;
+
+
+        public SheetSync(StrangeMailStampSystem gui, Dictionary<string, int> playersWithRolls, Dictionary<string, int> playersWithRollsBonus, out List<PlayerData>  finalPlayerDataList)
         {
             gResults = new List<string>();
+            gFinalPlayerDataList = new List<PlayerData>();
+            
             gErrors = "";
+            gFinalRoll = 0;
+            gStampDeduction = 0;
+            gRemainingStamps = 0;
+            gStampCost = 0;
 
             gPlayersWithRolls = playersWithRolls;
             gPlayersWithRollsBonus = playersWithRollsBonus;
@@ -48,14 +62,14 @@ namespace StrangeMailStampSystem
 
             //Create COM Objects. Create a COM object for everything that is referenced
             Excel.Application xlApp = new Excel.Application();
-            Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(@"C:\Users\Bobby\Documents\StrangeMailStampSystem.xlsx", 0, false, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", true, false, 0, true, 1, 0);
+            Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(@"G:\My Drive\StrangeMailStampSystem.xlsx", 0, false, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", true, false, 0, true, 1, 0);
             Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
             Excel.Range xlRange = xlWorksheet.UsedRange;
 
             int rowCount = xlRange.Rows.Count;
             int colCount = xlRange.Columns.Count;
 
-            xlApp.Visible = true;
+            //xlApp.Visible = true;
 
             // For each player in the list with bonus rolls
             foreach (var player in gPlayersWithRollsBonus)
@@ -84,7 +98,30 @@ namespace StrangeMailStampSystem
                             if (xlRange.Cells[i, j].Value2.Equals(pd.Name))
                             {
                                 // If we find the player, update their stamp count and output final roll
-                                xlRange.Cells[i, j + 1].Value = pd.Rolls.ToString();
+                                string previousStampValue = xlRange.Cells[i, j+1].Value2.ToString();
+                                int previousStampValueInt = Int32.Parse(previousStampValue);
+
+
+
+                                gFinalRoll = previousStampValueInt + pd.Rolls;
+
+                                gStampDeduction = previousStampValueInt / 2;
+
+                                gStampCost = Round(gStampDeduction, 5);
+
+                                gRemainingStamps = previousStampValueInt - gStampCost;
+
+
+                                
+                                pd.OriginalStampCount = previousStampValueInt;
+                                pd.FinalRoll = gFinalRoll;
+                                pd.StampCost = gStampCost;
+                                pd.StampsRemaining = gRemainingStamps;
+
+                                gFinalPlayerDataList.Add(pd);
+
+
+                                xlRange.Cells[i, j + 1].Value = gRemainingStamps;
                                 Console.WriteLine("Found name: " + pd.Name);
 
                             }
@@ -93,6 +130,25 @@ namespace StrangeMailStampSystem
                     }
                 }
             }
+
+
+            // Now lets add normal rollers to the final list
+            foreach (var player in gPlayersWithRolls)
+            {
+                PlayerData pd = new PlayerData();
+
+                pd.Name = player.Key;
+                pd.Rolls = player.Value;
+                pd.OriginalStampCount = 0;
+                pd.FinalRoll = player.Value;
+                pd.StampCost = 0;
+                pd.StampsRemaining = 0;
+
+                gFinalPlayerDataList.Add(pd);
+
+            }
+
+            xlWorkbook.Save();
 
             //cleanup
             GC.Collect();
@@ -116,6 +172,13 @@ namespace StrangeMailStampSystem
 
 
 
+            finalPlayerDataList = gFinalPlayerDataList;
+
+        }
+
+        double Round(double num, int multipleOf)
+        {
+            return Math.Ceiling((num + multipleOf / 2) / multipleOf) * multipleOf;
         }
 
         private void UpdatePlayerData(PlayerData pd)
