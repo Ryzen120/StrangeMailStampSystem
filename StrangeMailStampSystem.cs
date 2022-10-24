@@ -53,6 +53,14 @@ namespace StrangeMailStampSystem
 
         private string gRaidType;
 
+        private bool gTieFound;
+
+        private bool gTieFoundBetweenTwoNormal;
+
+        private bool gTieFoundBetweenTwoStamps;
+
+        private bool gTieFoundBetweenNormalAndStamps;
+
 
 
 
@@ -78,8 +86,13 @@ namespace StrangeMailStampSystem
             gItemName = "";
             gRaidName = "";
             gRaidType = "";
+            gTieFound = false;
 
-            
+            gTieFoundBetweenTwoNormal = false;
+            gTieFoundBetweenTwoStamps = false;
+            gTieFoundBetweenNormalAndStamps = false;
+
+
 
         }
 
@@ -97,7 +110,9 @@ namespace StrangeMailStampSystem
 
         private void IntializeList()
         {
-            string fileName = "C:\\Users\\Bobby\\Documents\\GuildMembers.txt";
+            string userName = Environment.GetEnvironmentVariable("USERNAME");
+
+            string fileName = "C:\\Users\\" + userName + "\\Documents\\GuildMembers.txt";
             gGuildMemberList = File.ReadAllLines(fileName).ToList();
             gGuildMemberListBonus = File.ReadAllLines(fileName).ToList();
 
@@ -175,7 +190,7 @@ namespace StrangeMailStampSystem
 
         private Color m_checkedListBoxGuildMembers_GetForeColor(CustomCheckedListBox listBox, DrawItemEventArgs e)
         {
-            if(e.Index >= 0)
+            if (e.Index >= 0)
             {
                 FuncInfo fi = (FuncInfo)m_checkedListBoxGuildMembers.Items[e.Index];
                 return fi.ForeColor;
@@ -240,7 +255,7 @@ namespace StrangeMailStampSystem
         {
 
 
-            for(int i = 0; i < m_checkedListBoxGuildMembers.CheckedItems.Count; i++)
+            for (int i = 0; i < m_checkedListBoxGuildMembers.CheckedItems.Count; i++)
             {
                 gGuildMemberListChecked.Add(m_checkedListBoxGuildMembers.CheckedItems[i].ToString());
             }
@@ -259,8 +274,9 @@ namespace StrangeMailStampSystem
             new RollChecker(this, gGuildMemberListChecked, gGuildMemberListBonusChecked);
         }
 
-        private void m_ButtonEnterRolls_Click(object sender, EventArgs e)
+        async private void m_ButtonEnterRolls_Click(object sender, EventArgs e)
         {
+
             // Grab rolls from game for normal roll members and store them in normal roll dictionary
             for (int i = 0; i < m_checkedListBoxGuildMembers.CheckedItems.Count; i++)
             {
@@ -287,6 +303,24 @@ namespace StrangeMailStampSystem
                 gPlayersWithRollsBonus.Add(m_checkedListBoxGuildMembersBonus.CheckedItems[i].ToString(), rollValue);
             }
 
+            foreach (var player in gPlayersWithRolls)
+            {
+                foreach (var bonusPlayer in gPlayersWithRollsBonus)
+                {
+                    if (player.Key.Equals(bonusPlayer.Key))
+                    {
+                        MessageBox.Show("The same player cant be selected for both categories (Stamps and No Stamps", "Same Player Used Twice");
+                        ClearAllFields();
+                        return;
+                    }
+                }
+            }
+
+            Task task1 = Task.Factory.StartNew(() => RunAll());
+        }
+
+        public void RunAll()
+        {
             // List of players with bonus rolls and changes are complete after this.
             new SheetSync(this, gPlayersWithRolls, gPlayersWithRollsBonus, out gFinalPlayerDataList);
 
@@ -302,7 +336,7 @@ namespace StrangeMailStampSystem
         public void CalculateWinner()
         {
 
-            foreach(PlayerData player in gFinalPlayerDataList)
+            foreach (PlayerData player in gFinalPlayerDataList)
             {
                 string message = "N/A";
 
@@ -319,10 +353,271 @@ namespace StrangeMailStampSystem
 
             }
 
-            double winningRoll = gFinalPlayerDataList.Max(player => player.FinalRoll);
-            string winnerName = "";
-            
-            foreach(PlayerData player in gFinalPlayerDataList)
+            // Now lets check for any ties
+            double temp = 0;
+            double potentialWinner = gFinalPlayerDataList.Max(player => player.FinalRoll);
+
+            // Grab just the roll values, add them to a list and sort them for comparison.
+            List<double> justRollValues = new List<double>();
+
+            foreach (PlayerData player in gFinalPlayerDataList)
+            {
+                justRollValues.Add(player.FinalRoll);
+            }
+
+            // Sort it
+            justRollValues.Sort();
+
+            // Make dictionary to hold the player data and a flag for if they are a stamp roller or not.
+            Dictionary<PlayerData, bool> dictionaryWithFlags = new Dictionary<PlayerData, bool>();
+
+            // For each roll in our list, check for a tie.
+            foreach (double roll in justRollValues)
+            {
+
+                // If their roll equals the previous and has the value of the potential winning roll, its a tie.
+                if (roll == temp && roll == potentialWinner)
+                {
+                    gTieFound = true;
+                    this.UpdateLogs("Tie was found");
+                    MessageBox.Show("Tie was found!", "Tie Detected");
+
+                    // Check if each player in the final list is a stamp roller or not.
+                    foreach (PlayerData player in gFinalPlayerDataList)
+                    {
+                        // If theyre stamp cost is NOT 0, they are a stamp roller
+                        if (player.StampCost != 0)
+                        {
+                            dictionaryWithFlags.Add(player, true);
+                        }
+                        // If theyre stamp cost is 0, they are a normal roller
+                        else
+                        {
+                            dictionaryWithFlags.Add(player, false);
+                        }
+
+                    }
+
+
+                    // Add prompt for reroll, though if you tied with a normal roller when you used stamps you just get it. If two stamp users tie, reroll and re-apply stamps.If two normal rollers tie, reroll.
+
+                    bool stampRollerHadAWinningValue = false;
+                    bool normalRollerHadAWinningValue = false;
+
+
+                    foreach (KeyValuePair<PlayerData, bool> player in dictionaryWithFlags)
+                    {
+                        bool flag = player.Value;
+
+                        // If two normal rollers tie, reroll them
+                        if (roll == player.Key.FinalRoll && flag == false && roll == potentialWinner)
+                        {
+                            this.UpdateLogs("Tie was found between two normal rollers");
+                            normalRollerHadAWinningValue = true;
+                        }
+                        // If two stamp rollers tie, reroll them with stamps reapplied.
+                        else if (roll == player.Key.FinalRoll && flag == true && roll == potentialWinner)
+                        {
+                            this.UpdateLogs("Tie was found between two stamp rollers");
+                            stampRollerHadAWinningValue = true;
+                        }
+                        // If a normal roller ties with a stamp roller, stamp roller wins
+                        else if (roll == player.Key.FinalRoll && (flag == true || flag == false) && roll == potentialWinner)
+                        {
+                            this.UpdateLogs("A tie was found between a stamp roller and normal roller");
+                            stampRollerHadAWinningValue = true;
+                            normalRollerHadAWinningValue = true;
+                        }
+                        else
+                        {
+                            //this.UpdateLogs("Tie didnt beat winning value");
+                        }
+
+
+                    }
+
+                    if (normalRollerHadAWinningValue && stampRollerHadAWinningValue)
+                    {
+                        // We tied between a stamp roller and a normal roller, stamp roll wins
+                        gTieFoundBetweenNormalAndStamps = true;
+                    }
+                    else if (normalRollerHadAWinningValue && !stampRollerHadAWinningValue)
+                    {
+                        // We tied between two normal rollers
+                        gTieFoundBetweenTwoNormal = true;
+                    }
+                    else
+                    {
+                        // We ties between two stamp rollers
+                        gTieFoundBetweenTwoStamps = true;
+                    }
+
+                }
+                else
+                {
+                    gTieFound = false;
+                    //this.UpdateLogs("No tie found");
+                }
+
+                temp = roll;
+            }
+
+            if (gTieFound)
+            {
+                // Do tie break things;
+
+                if (gTieFoundBetweenTwoStamps)
+                {
+                    MessageBox.Show("Tie found between the two stamp rollers. Clear run and reset stamp count on sheet. Only stamp people will reroll.", "Tie between stamp rollers detected");
+                    return;
+
+                }
+                else if (gTieFoundBetweenTwoNormal)
+                {
+                    MessageBox.Show("Tie found between the two normal rollers. Clear run and only normal people will reroll.", "Tie between normal rollers detected");
+                    return;
+                }
+                else if (gTieFoundBetweenNormalAndStamps)
+                {
+
+                    MessageBox.Show("Tie found between stamp and normal rollers. Stamp roller will win", "Tie Detected");
+
+                    double winningRoll = gFinalPlayerDataList.Max(player => player.FinalRoll);
+
+                    string winnerName = "";
+
+                    foreach (PlayerData player in gFinalPlayerDataList)
+                    {
+
+                        if (player.FinalRoll == winningRoll && player.StampCost != 0)
+                        {
+                            this.UpdateLogs(player.Name + " Wins " + gItemName + " With a roll of " + player.FinalRoll);
+                            winnerName = player.Name;
+
+                            gWinningPlayerData.ItemWon = gItemName;
+                            gWinningPlayerData.Name = player.Name;
+                            gWinningPlayerData.Rolls = player.Rolls;
+                            gWinningPlayerData.OriginalStampCount = player.OriginalStampCount;
+                            gWinningPlayerData.FinalRoll = player.FinalRoll;
+                            gWinningPlayerData.StampCost = player.StampCost;
+
+                        }
+                        else
+                        {
+                            gWinningPlayerData.CompetingRolls.Add(player.Name, player.FinalRoll);
+                        }
+                    }
+
+                    foreach (PlayerData player in gFinalPlayerDataList.ToList())
+                    {
+                        if (player.Name.Equals(winnerName))
+                        {
+                            gFinalPlayerDataList.Remove(player);
+                        }
+
+                        if (player.StampCost == 0)
+                        {
+                            gFinalPlayerDataList.Remove(player);
+                        }
+                    }
+
+                    //Create COM Objects. Create a COM object for everything that is referenced
+                    Excel.Application xlApp = new Excel.Application();
+                    Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(@"G:\My Drive\StrangeMailStampSystem.xlsx", 0, false, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", true, false, 0, true, 1, 0);
+                    Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                    Excel.Range xlRange = xlWorksheet.UsedRange;
+
+                    int rowCount = xlRange.Rows.Count;
+                    int colCount = xlRange.Columns.Count;
+
+                    //xlApp.Visible = true;
+
+                    // For each player in the list with bonus rolls
+                    foreach (var player in gFinalPlayerDataList)
+                    {
+
+
+                        // Update each players data
+                        //UpdatePlayerData(pd);
+
+                        for (int i = 1; i <= rowCount; i++)
+                        {
+                            for (int j = 1; j <= colCount; j++)
+                            {
+                                //new line
+                                if (j == 1)
+                                    Console.Write("\r\n");
+
+                                //write the value to the console
+                                if (xlRange.Cells[i, j] != null && xlRange.Cells[i, j].Value2 != null)
+                                {
+                                    Console.Write(xlRange.Cells[i, j].Value2.ToString() + "\t");
+
+                                    // If they are not the winner and have a stamp cost lists
+                                    if (xlRange.Cells[i, j].Value2.Equals(player.Name))
+                                    {
+
+
+                                        // If they were not the winner, reset their stamp count back to normal
+                                        xlRange.Cells[i, j + 1].Value = player.OriginalStampCount;
+
+
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+                    xlWorkbook.Save();
+
+                    //cleanup
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                    //rule of thumb for releasing com objects:
+                    //  never use two dots, all COM objects must be referenced and released individually
+                    //  ex: [somthing].[something].[something] is bad
+
+                    //release com objects to fully kill excel process from running in the background
+                    Marshal.ReleaseComObject(xlRange);
+                    Marshal.ReleaseComObject(xlWorksheet);
+
+                    //close and release
+                    xlWorkbook.Close();
+                    Marshal.ReleaseComObject(xlWorkbook);
+
+                    //quit and release
+                    xlApp.Quit();
+                    Marshal.ReleaseComObject(xlApp);
+
+                }
+                else
+                {
+
+                }
+
+
+
+            }
+            else
+            {
+                // Continue as normal
+                double winningRoll = gFinalPlayerDataList.Max(player => player.FinalRoll);
+
+                string winnerName = "";
+
+                DeclareWinnerAndFixStamps(winningRoll, winnerName);
+            }
+
+
+        }
+
+        public void DeclareWinnerAndFixStamps(double winningRoll, string winnerName)
+        {
+
+
+            foreach (PlayerData player in gFinalPlayerDataList)
             {
 
                 if (player.FinalRoll == winningRoll)
@@ -336,7 +631,7 @@ namespace StrangeMailStampSystem
                     gWinningPlayerData.OriginalStampCount = player.OriginalStampCount;
                     gWinningPlayerData.FinalRoll = player.FinalRoll;
                     gWinningPlayerData.StampCost = player.StampCost;
-                    
+
                 }
                 else
                 {
@@ -344,14 +639,14 @@ namespace StrangeMailStampSystem
                 }
             }
 
-            foreach(PlayerData player in gFinalPlayerDataList.ToList())
+            foreach (PlayerData player in gFinalPlayerDataList.ToList())
             {
-                if(player.Name.Equals(winnerName))
+                if (player.Name.Equals(winnerName))
                 {
                     gFinalPlayerDataList.Remove(player);
                 }
 
-                if(player.StampCost == 0)
+                if (player.StampCost == 0)
                 {
                     gFinalPlayerDataList.Remove(player);
                 }
@@ -392,11 +687,11 @@ namespace StrangeMailStampSystem
                             // If they are not the winner and have a stamp cost lists
                             if (xlRange.Cells[i, j].Value2.Equals(player.Name))
                             {
- 
+
 
                                 // If they were not the winner, reset their stamp count back to normal
                                 xlRange.Cells[i, j + 1].Value = player.OriginalStampCount;
-                                
+
 
                             }
                         }
@@ -482,7 +777,7 @@ namespace StrangeMailStampSystem
             xlWorksheet.Cells[row, column++].Value = gWinningPlayerDataList[0].StampCost;
             xlWorksheet.Cells[row, column++].Value = gRaidName;
             xlWorksheet.Cells[row, column++].Value = gRaidType;
-            xlWorksheet.Cells[row, column++].Value = System.DateTime.Now.ToString();
+            xlWorksheet.Cells[row, column++].Value = System.DateTime.Now.ToShortDateString();
 
 
             /*
@@ -585,6 +880,11 @@ namespace StrangeMailStampSystem
 
         private void m_ButtonClearAllFields_Click(object sender, EventArgs e)
         {
+            ClearAllFields();
+        }
+
+        private void ClearAllFields()
+        {
             m_TextBoxItemName.Text = "";
             m_Checkbox10Man.Checked = false;
             m_CheckBox25Man.Checked = false;
@@ -601,7 +901,6 @@ namespace StrangeMailStampSystem
 
             m_checkedListBoxGuildMembers.Items.Clear();
             m_checkedListBoxGuildMembersBonus.Items.Clear();
-
         }
     }
 

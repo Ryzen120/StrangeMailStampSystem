@@ -28,7 +28,7 @@ namespace StrangeMailStampSystem
         private List<PlayerData> gFinalPlayerDataList;
 
         int gFinalRoll;
-        int gStampDeduction;
+        double gStampDeduction;
         double gRemainingStamps;
         double gStampCost;
 
@@ -107,7 +107,9 @@ namespace StrangeMailStampSystem
 
                                 gStampDeduction = previousStampValueInt / 2;
 
-                                gStampCost = Round(gStampDeduction, 5);
+                                //gStampCost = Round(gStampDeduction, 5);
+
+                                gStampCost = Math.Round(gStampDeduction);
 
                                 gRemainingStamps = previousStampValueInt - gStampCost;
 

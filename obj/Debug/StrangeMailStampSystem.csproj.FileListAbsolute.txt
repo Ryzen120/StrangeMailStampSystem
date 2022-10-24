@@ -12,6 +12,7 @@ C:\GIT Repo\StrangeMailStampSystem\bin\Debug\StrangeMailStampSystem.exe.config
 C:\GIT Repo\StrangeMailStampSystem\bin\Debug\StrangeMailStampSystem.exe
 C:\GIT Repo\StrangeMailStampSystem\bin\Debug\StrangeMailStampSystem.pdb
 C:\GIT Repo\StrangeMailStampSystem\bin\Debug\Newtonsoft.Json.dll
+C:\GIT Repo\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.csproj.AssemblyReference.cache
 C:\GIT Repo\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.csproj.ResolveComReference.cache
 C:\GIT Repo\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.StrangeMailStampSystem.resources
 C:\GIT Repo\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.Properties.Resources.resources
@@ -20,4 +21,8 @@ C:\GIT Repo\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.csproj.CoreC
 C:\GIT Repo\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.csproj.CopyComplete
 C:\GIT Repo\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.exe
 C:\GIT Repo\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.pdb
-C:\GIT Repo\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.csproj.AssemblyReference.cache
+C:\GIT Repo\StrangeMailStampSystem\bin\Debug\StrangeMailStampSystem.exe.manifest
+C:\GIT Repo\StrangeMailStampSystem\bin\Debug\StrangeMailStampSystem.application
+C:\GIT Repo\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.TrustInfo.xml
+C:\GIT Repo\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.exe.manifest
+C:\GIT Repo\StrangeMailStampSystem\obj\Debug\StrangeMailStampSystem.application
